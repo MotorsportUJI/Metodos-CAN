@@ -30,8 +30,8 @@ static void handle_incoming(const CAN_message_t &msg) {
 }
 
 void CAN_BR_setup() {
-  Serial.begin(115200); delay(200);
-  pinMode(6, OUTPUT); digitalWrite(6, LOW);
+  Serial.begin(9600); delay(200);
+  pinMode(6, OUTPUT); digitalWrite(6, LOW); //Ajustar PIN
 
   Can0.begin();
   Can0.setBaudRate(1000000);

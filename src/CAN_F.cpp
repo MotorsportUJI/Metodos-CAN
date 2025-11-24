@@ -4,9 +4,9 @@
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0; // local bus instance for this PCB
 
 void CAN_F_setup() {
-  Serial.begin(115200);
+  Serial.begin(9600);
   delay(200);
-  pinMode(6, OUTPUT); digitalWrite(6, LOW); // optional transceiver enable
+  pinMode(6, OUTPUT); digitalWrite(6, LOW); // optional transceiver enable. Ajustar PIN
 
   Can0.begin();
   Can0.setBaudRate(1000000);
