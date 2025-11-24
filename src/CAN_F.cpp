@@ -1,18 +1,56 @@
+#include "CAN_F.h"
 #include <Arduino.h>
 
-// put function declarations here:
-int myFunction(int, int);
+FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0; // local bus instance for this PCB
 
-void setup() {
-  // put your setup code here, to run once:
-  int result = myFunction(2, 3);
+void setupFront() {
+  Serial.begin(115200);
+  delay(200);
+  pinMode(6, OUTPUT); digitalWrite(6, LOW); // optional transceiver enable
+
+  Can0.begin();
+  Can0.setBaudRate(1000000);
+  Can0.setMaxMB(16);
+  Can0.enableFIFO();
+  Can0.enableFIFOInterrupt();
+  Can0.onReceive([](const CAN_message_t &msg){
+    // simple generic receive handler - expand if needed
+    switch (msg.id) {
+      case ID_FRONT_001:
+        // message from myself/other front units - decode if desired
+        break;
+      default:
+        break;
+    }
+  });
+  Can0.mailboxStatus();
 }
 
-void loop() {
-  // put your main code here, to run repeatedly:
+void sendFront_presion(const PCB_Front_t &d) {
+  CAN_message_t msg;
+  msg.id = ID_FRONT_001;
+  msg.len = 8; // fixed length on the bus
+  // zero the buffer then copy struct bytes (little-endian assumed)
+  for (int i = 0; i < 8; ++i) msg.buf[i] = 0;
+  memcpy(msg.buf, &d, sizeof(PCB_Front_t));
+  Can0.write(msg);
 }
 
-// put function definitions here:
-int myFunction(int x, int y) {
-  return x + y;
+void loopFront() {
+  Can0.events();
+  // Example periodic send - integrate with your real sensor read
+  static uint32_t t = 0;
+  if (millis() - t > 100) {
+    PCB_Front_t out{};
+    // TODO: read real sensor into out.presion_freno
+    out.presion_freno = 0; // placeholder
+    sendFront_presion(out);
+    t = millis();
+  }
 }
+
+// If compiling as a standalone sketch for this PCB, map setup()/loop()
+#if defined(COMPILE_AS_SKETCH_PCB_FRONT)
+void setup() { setupFront(); }
+void loop() { loopFront(); }
+#endif
