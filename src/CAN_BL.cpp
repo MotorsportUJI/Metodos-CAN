@@ -27,7 +27,7 @@ static void handleBL_incoming(const CAN_message_t &msg) {
   }
 }
 
-void setupBackLeft() {
+void CAN_BL_setup() {
   Serial.begin(115200); delay(200);
   pinMode(6, OUTPUT); digitalWrite(6, LOW);
 
@@ -64,7 +64,7 @@ void sendBL_102(const BL_102_t &d) {
   Can0.write(msg);
 }
 
-void loopBackLeft() {
+void CAN_BL_loop() {
   Can0.events();
 
   // Example periodic sends (replace with IMU reads / sensors)
@@ -84,6 +84,6 @@ void loopBackLeft() {
 }
 
 #if defined(COMPILE_AS_SKETCH_PCB_BACK_LEFT)
-void setup() { setupBackLeft(); }
-void loop() { loopBackLeft(); }
+void setup() { CAN_BL_setup(); }
+void loop() { CAN_BL_loop(); }
 #endif

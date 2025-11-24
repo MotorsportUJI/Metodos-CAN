@@ -34,8 +34,8 @@ struct BL_102_t {
   int16_t gyro_z;        // 6..7
 };
 
-void setupBackLeft();
-void loopBackLeft();
+void CAN_BL_setup();
+void CAN_BL_loop();
 void sendBL_012(const BL_012_t &d);
 void sendBL_022(const BL_022_t &d);
 void sendBL_102(const BL_102_t &d);

@@ -29,7 +29,7 @@ static void handle_incoming(const CAN_message_t &msg) {
   }
 }
 
-void setupBackRight() {
+void CAN_BR_setup() {
   Serial.begin(115200); delay(200);
   pinMode(6, OUTPUT); digitalWrite(6, LOW);
 
@@ -66,7 +66,7 @@ void sendBR_021(const BR_021_t &d) {
   Can0.write(msg);
 }
 
-void loopBackRight() {
+void CAN_BR_loop() {
   Can0.events();
 
   // Example periodic sends (replace with real readings)
@@ -86,6 +86,6 @@ void loopBackRight() {
 }
 
 #if defined(COMPILE_AS_SKETCH_PCB_BACK_RIGHT)
-void setup() { setupBackRight(); }
-void loop() { loopBackRight(); }
+void setup() { CAN_BR_setup(); }
+void loop() { CAN_BR_loop(); }
 #endif

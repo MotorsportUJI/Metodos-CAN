@@ -3,7 +3,7 @@
 
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0; // local bus instance for this PCB
 
-void setupFront() {
+void CAN_F_setup() {
   Serial.begin(115200);
   delay(200);
   pinMode(6, OUTPUT); digitalWrite(6, LOW); // optional transceiver enable
@@ -36,7 +36,7 @@ void sendFront_presion(const PCB_Front_t &d) {
   Can0.write(msg);
 }
 
-void loopFront() {
+void CAN_F_loop() {
   Can0.events();
   // Example periodic send - integrate with your real sensor read
   static uint32_t t = 0;
@@ -51,6 +51,6 @@ void loopFront() {
 
 // If compiling as a standalone sketch for this PCB, map setup()/loop()
 #if defined(COMPILE_AS_SKETCH_PCB_FRONT)
-void setup() { setupFront(); }
-void loop() { loopFront(); }
+void setup() { CAN_F_setup(); }
+void loop() { CAN_F_loop(); }
 #endif

@@ -38,8 +38,8 @@ struct BR_021_t {
   uint8_t _pad;             // 7
 };
 
-void setupBackRight();
-void loopBackRight();
+void CAN_BR_setup();
+void CAN_BR_loop();
 void sendBR_011(const BR_011_t &d);
 void sendBR_101(const BR_101_t &d);
 void sendBR_021(const BR_021_t &d);
