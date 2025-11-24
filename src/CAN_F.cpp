@@ -49,8 +49,3 @@ void CAN_F_loop() {
   }
 }
 
-// If compiling as a standalone sketch for this PCB, map setup()/loop()
-#if defined(COMPILE_AS_SKETCH_PCB_FRONT)
-void setup() { CAN_F_setup(); }
-void loop() { CAN_F_loop(); }
-#endif

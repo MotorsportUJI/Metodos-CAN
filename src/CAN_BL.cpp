@@ -83,7 +83,3 @@ void CAN_BL_loop() {
   }
 }
 
-#if defined(COMPILE_AS_SKETCH_PCB_BACK_LEFT)
-void setup() { CAN_BL_setup(); }
-void loop() { CAN_BL_loop(); }
-#endif

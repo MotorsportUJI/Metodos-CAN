@@ -85,7 +85,3 @@ void CAN_BR_loop() {
   }
 }
 
-#if defined(COMPILE_AS_SKETCH_PCB_BACK_RIGHT)
-void setup() { CAN_BR_setup(); }
-void loop() { CAN_BR_loop(); }
-#endif
