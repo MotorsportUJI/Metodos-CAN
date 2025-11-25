@@ -1,4 +1,5 @@
 #include "CAN_send.h"
+#include "CAN_bus.h"
 #define freq_F_001 100
 
 #define freq_BL_012 100
@@ -10,7 +11,7 @@
 #define freq_BR_021 100
 //Quitar los define de las que no vaya a enviar en esa pcb
 
-static FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0; // single CAN instance
+
 
 /*void CAN_init_sender() {
     

@@ -1,8 +1,8 @@
 #include <Arduino.h>
 #include "CAN_send.h"
 #include "CAN_receive.h"
+#include "CAN_bus.h"
 
-FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0;
 
 void setup() {
     Can0.begin();
