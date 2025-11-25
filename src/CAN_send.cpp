@@ -1,11 +1,20 @@
 #include "CAN_send.h"
+#define freq_F_001 100
+
+#define freq_BL_012 100
+#define freq_BL_022 100
+#define freq_BL_102 100
+
+#define freq_BR_011 100
+#define freq_BR_101 100
+#define freq_BR_021 100
+//Quitar los define de las que no vaya a enviar en esa pcb
 
 static FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0; // single CAN instance
 
-void CAN_init_sender() {
-    Can0.begin();
-    Can0.setBaudRate(1000000); // set bus speed
-}
+/*void CAN_init_sender() {
+    
+}*/
 
 // helper function to send any struct over CAN
 static void sendFrame(uint32_t id, const void *data, uint8_t len) {
@@ -15,6 +24,10 @@ static void sendFrame(uint32_t id, const void *data, uint8_t len) {
     memcpy(msg.buf, data, len); // copy struct bytes into CAN buffer
     Can0.write(msg);
 }
+
+//Quitar en cada pcb la de las otras pcbs
+// F sends
+void CAN_send_F_001(const F_001_t &d){ sendFrame(ID_F_001, &d, sizeof(d)); }
 
 // BL sends
 void CAN_send_BL_012(const BL_012_t &d){ sendFrame(ID_BL_012, &d, sizeof(d)); }
@@ -26,25 +39,24 @@ void CAN_send_BR_011(const BR_011_t &d){ sendFrame(ID_BR_011, &d, sizeof(d)); }
 void CAN_send_BR_101(const BR_101_t &d){ sendFrame(ID_BR_101, &d, sizeof(d)); }
 void CAN_send_BR_021(const BR_021_t &d){ sendFrame(ID_BR_021, &d, sizeof(d)); }
 
-// F sends
-void CAN_send_F_001(const F_001_t &d){ sendFrame(ID_F_001, &d, sizeof(d)); }
-
 void CAN_loop_sender() {
-    // temporizadores independientes para cada struct
-    static uint32_t t_F_001    = 100;
+    // temporizadores independientes para cada struct, dejar a 0, son para guardar la ultima vez que se miró para poder volverlas a mirar x tiempo despues de haverlas leidos, le ajusta mejor si hay delay en el coche
+    static uint32_t t_F_001    = 0;
 
-    static uint32_t t_BL_012   = 100;
-    static uint32_t t_BL_022   = 100;
-    static uint32_t t_BL_102   = 100;
-    
-    static uint32_t t_BR_011   = 100;
-    static uint32_t t_BR_101   = 100;
-    static uint32_t t_BR_021   = 100;
+    static uint32_t t_BL_012   = 0;
+    static uint32_t t_BL_022   = 0;
+    static uint32_t t_BL_102   = 0;
+
+    static uint32_t t_BR_011   = 0;
+    static uint32_t t_BR_101   = 0;
+    static uint32_t t_BR_021   = 0;
 
     uint32_t now = millis();
 
-    // ---------- PCB_FRONT (ejemplo) ----------
-    if (now - t_F_001 > 100) { // enviar cada 100 ms (configurable)
+    //Dejar en la versión de cada PCB solo las que vaya a dejar y Cambiar la variable por la real, tanto los temporizadores de arriba como del codigo de abajo
+
+    // ---------- PCB_FRONT ----------
+    if (now - t_F_001 > freq_F_001) {
         F_001_t msg_F{};
         msg_F.presion_freno = 0; // reemplazar por la variable real de sensor
         CAN_send_F_001(msg_F);
@@ -52,7 +64,7 @@ void CAN_loop_sender() {
     }
 
     // ---------- PCB_BACK_LEFT ----------
-    if (now - t_BL_012 > 50) { // enviar cada 50 ms
+    if (now - t_BL_012 > freq_BL_012) {
         BL_012_t msg_BL_012{};
         msg_BL_012.temp_oil     = 60; // sustituir por variable real
         msg_BL_012.temp_gas     = 55;
@@ -64,9 +76,9 @@ void CAN_loop_sender() {
         t_BL_012 = now;
     }
 
-    if (now - t_BL_022 > 100) { // enviar cada 100 ms
+    if (now - t_BL_022 > freq_BL_022) {
         BL_022_t msg_BL_022{};
-        msg_BL_022.pres_admision   = 2;
+        msg_BL_022.pres_admision   = 2;// sustituir por variable real
         msg_BL_022.pres_oil        = 3;
         msg_BL_022.pres_gas        = 1;
         msg_BL_022.gal_din_left_1  = 5;
@@ -77,9 +89,9 @@ void CAN_loop_sender() {
         t_BL_022 = now;
     }
 
-    if (now - t_BL_102 > 200) { // enviar cada 200 ms
+    if (now - t_BL_102 > freq_BL_102) { 
         BL_102_t msg_BL_102{};
-        msg_BL_102.accel_x = 100;
+        msg_BL_102.accel_x = 100;// sustituir por variable real
         msg_BL_102.accel_y = -100;
         msg_BL_102.accel_z = 50;
         msg_BL_102.gyro_z  = 10;
@@ -88,9 +100,9 @@ void CAN_loop_sender() {
     }
 
     // ---------- PCB_BACK_RIGHT ----------
-    if (now - t_BR_011 > 50) {
+    if (now - t_BR_011 > freq_BR_011) {
         BR_011_t msg_BR_011{};
-        msg_BR_011.temp_cable_case = 10;
+        msg_BR_011.temp_cable_case = 10;// sustituir por variable real
         msg_BR_011.temp_firewall   = 20;
         msg_BR_011.temp_fan1       = 30;
         msg_BR_011.temp_fan2       = 31;
@@ -102,9 +114,9 @@ void CAN_loop_sender() {
         t_BR_011 = now;
     }
 
-    if (now - t_BR_101 > 100) {
+    if (now - t_BR_101 > freq_BR_101) {
         BR_101_t msg_BR_101{};
-        msg_BR_101.gal_ext_RA_1    = 1;
+        msg_BR_101.gal_ext_RA_1    = 1;// sustituir por variable real
         msg_BR_101.gal_ext_RA_2    = 2;
         msg_BR_101.gal_ext_RA_3    = 3;
         msg_BR_101.gal_ext_RA_4    = 4;
@@ -115,9 +127,9 @@ void CAN_loop_sender() {
         t_BR_101 = now;
     }
 
-    if (now - t_BR_021 > 200) {
+    if (now - t_BR_021 > freq_BR_021) {
         BR_021_t msg_BR_021{};
-        msg_BR_021.hall_rear_right   = 1234;
+        msg_BR_021.hall_rear_right   = 1234;// sustituir por variable real
         msg_BR_021.rpm_obd           = 3000;
         msg_BR_021.temp_obd          = 60;
         msg_BR_021.throttle          = 50;

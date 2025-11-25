@@ -5,7 +5,7 @@
 #include "CAN_structs.h"
 #include "CAN_ids.h"
 
-void CAN_init_sender(); // initialize CAN sender
+//void CAN_init_sender(); No es necesaria ya que esta en el main de las pcbs
 void CAN_loop_sender(); // periodic sending scheduler
 
 // send functions for all PCBs

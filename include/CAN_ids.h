@@ -1,3 +1,4 @@
+//Borrar en cada pcb las que no voy a usar ni para enviar ni para recibir
 #ifndef CAN_IDS_H
 #define CAN_IDS_H
 
@@ -12,3 +13,4 @@
 #define ID_BL_102  0x102
 
 #endif
+//Borrar las que 

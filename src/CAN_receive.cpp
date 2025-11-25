@@ -2,6 +2,7 @@
 
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0; // CAN receiver instance
 
+
 // last received values storage
 F_001_t recv_F_001;
 BL_012_t recv_BL_012;
@@ -10,10 +11,12 @@ BL_102_t recv_BL_102;
 BR_011_t recv_BR_011;
 BR_101_t recv_BR_101;
 BR_021_t recv_BR_021;
+//Borrar en las pcbs las que no vaya a recibir
 
 // callback executed when message arrives
 static void can_callback(const CAN_message_t &msg) {
     switch (msg.id) {
+        //Borrar en las pcbs las que no vaya a recibir
         case ID_F_001: memcpy(&recv_F_001, msg.buf, sizeof(F_001_t)); break;
         case ID_BL_012: memcpy(&recv_BL_012, msg.buf, sizeof(BL_012_t)); break;
         case ID_BL_022: memcpy(&recv_BL_022, msg.buf, sizeof(BL_022_t)); break;
@@ -25,8 +28,7 @@ static void can_callback(const CAN_message_t &msg) {
 }
 
 void CAN_init_receiver() {
-    Can0.begin();
-    Can0.setBaudRate(1000000);
+    
     Can0.enableFIFO();
     Can0.onReceive(can_callback); // attach callback to process incoming frames
 }
